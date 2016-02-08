@@ -1,0 +1,15 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title><%= @title %></title>
+  <link rel="shortcut icon" href="/static/favicon.ico" />
+</head>
+<body>
+  <h3>Welcome to Simple Dynamo web</h3>
+  <form action="/post" method="post">
+  	<h4>What are you up to?</h4>
+  	<textarea placeholder="please type ......" name="content"></textarea>
+  	<button>Submit</button>
+  </form>
+</body>
+</html>
