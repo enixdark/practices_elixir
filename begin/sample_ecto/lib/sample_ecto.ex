@@ -1,0 +1,2 @@
+defmodule SampleEcto do
+end

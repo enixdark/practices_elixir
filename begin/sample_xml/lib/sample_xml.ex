@@ -1,0 +1,2 @@
+defmodule SampleXml do
+end
