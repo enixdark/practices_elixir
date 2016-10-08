@@ -1,27 +1,75 @@
-  defmodule Meter.Worker do
+require IEx
+defmodule Meter.Worker do
+  use GenServer
+
+  @name MW
+
+  def start_link(opts \\ []) do
+    GenServer.start_link(__MODULE__, :ok, opts ++ [name: MW])
+  end
+
+  def init(_) do
+    {:ok, %{}}
+  end
 
 
-    def loop do
-      
-      receive do
-        {sender_pid, location} ->
-          send(sender_pid, {:ok, temperature_of(location)})
-        _ ->
-          IO.puts "don't have process"
-      end
-      loop
+  def handle_call({:location, location}, _from, state) do
+    result = url_for(location) 
+             |> HTTPoison.get 
+             |> parse_response_of
+    case result do
+      {:ok, temp} ->
+        new_stats = update_stats(state, location)
+        {:reply, "#{location}: #{temp}*C", new_stats}
+      :error ->
+        {:reply, :error, state} 
     end
-    
-    def temperature_of(location) do
-      result = url_for(location) 
-               |> HTTPoison.get 
-               |> parse_response_of
-      case result do
-        {:ok, temp} ->
-          "#{location}: #{temp}*C"
-        :error ->
-        "#{location} not found"
+  end
+
+  def handle_call(:get_stats, _from ,state) do
+    {:reply, state, state}
+  end
+
+  def handle_cast(:reset_stats, _state), do: {:noreply, %{}}
+  def handle_cast(:stop, state), do: {:stop, :normal, state}
+
+  def handle_info(msg, state) do
+    IO.puts "received #{inspect msg}"
+    {:noreply, state}
+  end
+  def stop(pid) do
+    GenServer.cast(pid, :stop)
+  end
+
+  def terminate(reason ,state) do
+    IO.puts "server terminated because of #{inspect reason}"
+    inspect state
+    :ok
+  end
+
+
+
+
+
+  def reset_stats(pid) do
+    GenServer.cast(pid, :reset_stats)
+  end
+
+  def get_stats(pid) do
+    GenServer.call(pid, :get_stats)
+  end
+
+  defp update_stats(states, location) do
+    IEx.pry
+    case Map.has_key?(states, location) do
+       true ->
+         Map.update!(states, location, &(&1 + 1))
+       false ->
+         Map.put_new(states, location, 1)
     end
+  end
+  def temperature_of(pid, location) do
+    GenServer.call(pid, {:location, location})
   end
 
   defp url_for(location) do
