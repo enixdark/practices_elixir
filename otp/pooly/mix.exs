@@ -1,8 +1,8 @@
-defmodule Meter.Mixfile do
+defmodule Pooly.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :meter,
+    [app: :pooly,
      version: "0.1.0",
      elixir: "~> 1.3",
      build_embedded: Mix.env == :prod,
@@ -14,9 +14,10 @@ defmodule Meter.Mixfile do
   #
   # Type "mix help compile.app" for more information
   def application do
-    [applications: [:logger, :httpoison]]
+    [applications: [:logger], 
+              mod: {Pooly, []}
+    ]
   end
-
 
   # Dependencies can be Hex packages:
   #
@@ -28,9 +29,6 @@ defmodule Meter.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    [
-      {:httpoison, "~> 0.9.0"},
-      {:json, "~> 0.3.0"}
-    ]
+    []
   end
 end
