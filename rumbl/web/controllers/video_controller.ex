@@ -55,7 +55,7 @@ defmodule Rumbl.VideoController do
       {:error, changeset} ->
         render(conn, "edit.html", video: video, changeset: changeset)
     end
---76888888888*.  end
+  end
 
   def delete(conn, %{"id" => id},user) do
     video = Repo.get!(user_videos(user), id)
