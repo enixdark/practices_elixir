@@ -12,6 +12,7 @@ defmodule Rumbl.Video do
     field :slug, :string
     belongs_to :user, Rumbl.User
     belongs_to :category, Rumbl.Categories
+    has_many :annotations, Rumbl.Annotation
     timestamps()
   end
 
@@ -40,7 +41,7 @@ defmodule Rumbl.Video do
   end
 
   defimpl Phoenix.Param, for: Rumbl.Video do
-    def to_params(%{slug: slug, id: id}) do
+    def to_param(%{slug: slug, id: id}) do
       "#{id}-#{slug}"
     end
   end
