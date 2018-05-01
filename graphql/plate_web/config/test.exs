@@ -14,6 +14,6 @@ config :plate_web, PlateWeb.Repo,
   adapter: Ecto.Adapters.Postgres,
   username: "admin",
   password: "admin",
-  database: "plate",
+  database: "plate_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
